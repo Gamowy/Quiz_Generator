@@ -1,19 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Quiz.ViewModel
 {
     using Model;
     using Quiz.ViewModel.BaseClass;
-    using System.Collections.ObjectModel;
 
     class GenerateQuiz : ViewModelBase
     {
+        #region Properties
         public Quiz? quiz;
 
         private ObservableCollection<Question>? questions = null;
@@ -44,33 +42,97 @@ namespace Quiz.ViewModel
             }
         }
 
-        public string? QuestionContent { get; set; }
-        public string? AnswerA { get; set; }
-        public string? AnswerB { get; set; }
-        public string? AnswerC { get; set; }
-        public string? AnswerD { get; set; }
 
-        public bool AnswerACorrect { get; set; }
-        public bool AnswerBCorrect { get; set; }
-        public bool AnswerCCorrect { get; set; }
-        public bool AnswerDCorrect { get; set; }
+        private Question? selectedQuestion;
+        public Question? SelectedQuestion
+        {
+            get
+            {
+                return selectedQuestion;
+            }
+            set
+            {
+                selectedQuestion = value;
+                onPropertyChanged(nameof(SelectedQuestion));
+                if (selectedQuestion == null) 
+                { 
+                    SelectedQuestionAnswers = null;
+                }   
+                else if (Answers != null)
+                {
+                    SelectedQuestionAnswers = Answers.Where(answer => answer.Question_Id == SelectedQuestion!.Id).ToArray();
+                }
+            }
+        }
+
+        private Answer[]? selectedQuestionAnswers;
+        public Answer[]? SelectedQuestionAnswers { 
+            get
+            {
+                return selectedQuestionAnswers;
+            }
+            set
+            {
+                selectedQuestionAnswers = value;
+                onPropertyChanged(nameof(SelectedQuestionAnswers));
+            }      
+        }            
+        #endregion 
+
+        #region Methods
+        private void createQuizFile()
+        {
+            try
+            {
+                Quiz? newQuiz = QuizFileDialog.createFile();
+                if (newQuiz != null)
+                {
+                    quiz = newQuiz;
+                    quiz.loadFromFile();
+                    Questions = quiz.Questions;
+                    Answers = quiz.Answers;
+                    MessageBox.Show("Pomyślnie utworzono nowy quiz.", "Sukces", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                quiz = null;
+                Questions = null;
+                Answers = null;
+                MessageBox.Show($"Błąd podczas tworzenia bazy danych z quizem:\n{ex.Message}", "Błąd zapisu!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
         private void loadQuizFile()
         {
-            string filePath = string.Empty;
-
-            var dialog = new Microsoft.Win32.OpenFileDialog();
-            dialog.Filter = "db files (*.db)|*.db|All files (*.*)|*.*";
-            dialog.RestoreDirectory = true;
-
-            if (dialog.ShowDialog() == true)
-                filePath = dialog.FileName;
-
-            if (!filePath.Equals(string.Empty))
+            try
             {
-                quiz = new Quiz(filePath);
-                Questions = quiz.Questions;
-                Answers = quiz.Answers;
+                Quiz? newQuiz = QuizFileDialog.openFile();
+                if (newQuiz != null) {
+                    quiz = newQuiz;
+                    quiz.loadFromFile();
+                    Questions = quiz.Questions;
+                    Answers = quiz.Answers;
+                    MessageBox.Show("Pomyślnie załadowano quiz.", "Sukces", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                quiz = null;
+                Questions = null;
+                Answers = null;
+                MessageBox.Show($"Błąd podczas wczytywania bazy danych z quizem:\n{ex.Message}", "Błąd odczytu!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        #endregion
+
+        #region Commands
+
+        public ICommand CreateQuizCommand
+        {
+            get 
+            {
+                return new RelayCommand(execute => createQuizFile(), canExecute => true);
             }
         }
 
@@ -78,7 +140,7 @@ namespace Quiz.ViewModel
         {
             get
             {
-                return new RelayCommand(execute => { loadQuizFile(); }, canExecute => true); ;
+                return new RelayCommand(execute => loadQuizFile(), canExecute => true); ;
             }
         }
 
@@ -90,5 +152,27 @@ namespace Quiz.ViewModel
             }
         }
 
+        public ICommand AddQuestionCommand
+        {
+            get
+            {
+                return new RelayCommand(execute => quiz!.AddQuestion(), canExecute => (quiz != null));
+            }
+        }
+
+        public ICommand RemoveQuestionCommand
+        {
+            get
+            {
+                return new RelayCommand(
+                    execute =>
+                    {
+                        quiz!.RemoveQuestion(selectedQuestion!.Id);
+                        SelectedQuestion = null;
+                    },
+                    canExecute => (quiz != null && SelectedQuestion != null));
+            }
+        }
+        #endregion
     }
 }

@@ -1,13 +1,9 @@
 ﻿using Quiz.Model.Database;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace Quiz.Model
 {
@@ -24,73 +20,112 @@ namespace Quiz.Model
         #endregion
 
         private string databasePath;
+        private int lastId;
         public ObservableCollection<Question> Questions { get; private set; } = new ObservableCollection<Question>();
         public ObservableCollection<Answer> Answers { get; private set; } = new ObservableCollection<Answer>();
         public Quiz(string path)
         {
+            lastId = 0;
             databasePath = path;
-            loadQuiz();
         }
 
-        private void createTables() 
+        public void create()
         {
-            SQLiteConnection connection = DBConnection.Instance.getConnection(databasePath);
-            connection.Open();
-
-            // create questions table
-            SQLiteCommand createCommand = new SQLiteCommand(CREATE_QUESTIONS_TB, connection);
-            createCommand.ExecuteNonQuery();
-            //create answers table
-            createCommand = new SQLiteCommand(CREATE_ANSWERS_TB, connection);
-            createCommand.ExecuteNonQuery();
-            
-            connection.Close();
-        }
-
-        private void loadQuiz()
-        {
-            // create new database if file doesn't exist
-            if (!File.Exists(databasePath))
+            try
             {
+                if (!File.Exists(databasePath))
+                {
+                    File.Delete(databasePath);
+                }
+
                 SQLiteConnection.CreateFile(databasePath);
-                createTables();
-            }
-            SQLiteConnection connection = DBConnection.Instance.getConnection(databasePath);
-            connection.Open();
+                SQLiteConnection connection = DBConnection.Instance.getConnection(databasePath);
+                connection.Open();
 
-            // read questions from database
-            SQLiteCommand selectCommand = new SQLiteCommand(GET_QUESTIONS, connection);
-            SQLiteDataReader reader = selectCommand.ExecuteReader();
-            while (reader.Read())
+                // create questions table
+                SQLiteCommand createCommand = new SQLiteCommand(CREATE_QUESTIONS_TB, connection);
+                createCommand.ExecuteNonQuery();
+                //create answers table
+                createCommand = new SQLiteCommand(CREATE_ANSWERS_TB, connection);
+                createCommand.ExecuteNonQuery();
+
+                connection.Close();
+            }
+            catch (Exception ex)
             {
-                Question question = new Question((int)reader["id"]);
-                question.Content = reader["content"].ToString();
-                Questions.Add(question);
+                throw new Exception(ex.Message);
             }
-            // read answers from database
-            selectCommand = new SQLiteCommand(GET_ANSWERS, connection);
-            reader = selectCommand.ExecuteReader();
-            while (reader.Read())
+        }
+
+        public void loadFromFile()
+        {
+            try
             {
-                Answer answer = new Answer((int)reader["question_id"]);
-                answer.Content = reader["content"].ToString();
-                answer.IsCorrect = Convert.ToBoolean(reader["is_correct"]);
-                Answers.Add(answer);
+                SQLiteConnection connection = DBConnection.Instance.getConnection(databasePath);
+                connection.Open();
+
+                // read questions from database
+                SQLiteCommand selectCommand = new SQLiteCommand(GET_QUESTIONS, connection);
+                SQLiteDataReader reader = selectCommand.ExecuteReader();
+                while (reader.Read())
+                {
+                    Question question = new Question((int)reader["id"]);
+                    if (question.Id > lastId)
+                    {
+                        lastId = question.Id;
+                    }
+                    question.Content = reader["content"].ToString();
+                    Questions.Add(question);
+                }
+                // read answers from database
+                selectCommand = new SQLiteCommand(GET_ANSWERS, connection);
+                reader = selectCommand.ExecuteReader();
+                while (reader.Read())
+                {
+                    Answer answer = new Answer((int)reader["question_id"]);
+                    answer.Content = reader["content"].ToString();
+                    answer.IsCorrect = Convert.ToBoolean(reader["is_correct"]);
+                    Answers.Add(answer);
+                }
+                connection.Clone();
             }
-            connection.Clone();
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
-        public void AddQuestion(Question question)
+        public void AddQuestion()
         {
-            Questions.Add(question);
+            Question newQuestion = new Question(++lastId);
+            newQuestion.Content = "Nowe pytanie";
+            Questions.Add(newQuestion);
+
+            for (int i = 0; i < 4; i++)
+            {
+                Answers.Add(new Answer(lastId));
+            }
         }
 
-        public void AddAnswer(Answer answer)
+        public void RemoveQuestion(int removeQuestionId)
         {
-            Answers.Add(answer);
+            foreach (Question question in Questions.ToList())
+            {
+                if (question.Id == removeQuestionId)
+                {
+                    Questions.Remove(question);
+                }
+            }
+            foreach (Answer answer in Answers.ToList())
+            {
+                if (answer.Question_Id == removeQuestionId)
+                {
+                    Answers.Remove(answer);
+                }
+            }
         }
 
-        public void saveQuiz()
+        public void save()
         {
             throw new NotImplementedException();
         }

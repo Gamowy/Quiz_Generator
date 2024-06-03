@@ -39,13 +39,23 @@
             <RowDefinition Height="1*" />
             <RowDefinition Height="0.1*" />
         </Grid.RowDefinitions>
-        <Menu Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0">
-            <MenuItem Header="_Stwórz quiz"></MenuItem>
-            <MenuItem Header="_Otwórz quiz" Command="{Binding OpenQuizCommand}"></MenuItem>
-            <MenuItem Header="_Zapisz quiz"></MenuItem>
-            <MenuItem Header="_Wyjdź" Command="{Binding QuitCommand}"></MenuItem>
-        </Menu>
-        <DataGrid x:Name="QuestionsDataGrid" ItemsSource="{Binding Path=Questions}" Grid.Column="1" Grid.Row="1" Grid.RowSpan="8" AutoGenerateColumns="True" GridLinesVisibility="Vertical">
+        <Grid Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="CreateQuizButton" Grid.Column="0" Command="{Binding CreateQuizCommand}">Nowy quiz</Button>
+            <Button x:Name="OpenQuizButton" Grid.Column="1" Command="{Binding OpenQuizCommand}">Otwórz quiz</Button>
+            <Button x:Name="SaveQuizButton" Grid.Column="2">Zapisz quiz</Button>
+            <Button x:Name="ExitButton" Grid.Column="3" Command="{Binding QuitCommand}">Wyjdź</Button>
+        </Grid>
+        <DataGrid x:Name="QuestionsDataGrid" ItemsSource="{Binding Path=Questions}" SelectedItem="{Binding SelectedQuestion}" Grid.Column="1" Grid.Row="1" Grid.RowSpan="8" GridLinesVisibility="Vertical" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id Pytania" Binding="{Binding Id}"/>
+                <DataGridTextColumn Header="Treść pytania" Width="*" Binding="{Binding Content}"/>
+            </DataGrid.Columns>
         </DataGrid>
         <Grid Grid.Column="1" Grid.Row="10">
             <Grid.ColumnDefinitions>
@@ -53,49 +63,49 @@
                 <ColumnDefinition Width="0.1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="AddQuestionButton" Grid.Column="0">Dodaj pytanie</Button>
-            <Button x:Name="RemoveQuestionButton" Grid.Column="2">Usuń pytanie</Button>
+            <Button x:Name="AddQuestionButton" Grid.Column="0" Command="{Binding AddQuestionCommand}">Dodaj pytanie</Button>
+            <Button x:Name="RemoveQuestionButton" Grid.Column="2" Command="{Binding RemoveQuestionCommand}">Usuń pytanie</Button>
         </Grid>
         <Label x:Name="QuestionContentLabel" Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="2" Content="Treść pytania" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"></Label>
         <TextBox x:Name="QuestionContent" MaxLength="255" TextWrapping="Wrap" Grid.ColumnSpan="2" TextAlignment="Center" Grid.Column="3" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{
-            Binding Path=QuestionContent,
+            Binding Path=SelectedQuestion.Content,
             Mode=TwoWay
             }"/>
         <Label x:Name="AnswerALabel" Grid.Column="3" Grid.Row="3" Content="Odpowiedź A" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"></Label>
         <TextBox x:Name="AnswerA" MaxLength="127" TextWrapping="Wrap" TextAlignment="Center" Grid.Column="3" Grid.Row="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{
-            Binding Path=AnswerA,
+            Binding Path=SelectedQuestionAnswers[0].Content,
             Mode=TwoWay
             }"/>
         <Label x:Name="AnswerBLabel" Grid.Column="3" Grid.Row="5" Content="Odpowiedź B" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"></Label>
         <TextBox x:Name="AnswerB" MaxLength="127" TextWrapping="Wrap" TextAlignment="Center" Grid.Column="3" Grid.Row="6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{
-            Binding Path=AnswerB,
+            Binding Path=SelectedQuestionAnswers[1].Content,
             Mode=TwoWay
             }"/>
         <Label x:Name="AnswerCLabel" Grid.Column="3" Grid.Row="7" Content="Odpowiedź C" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"></Label>
         <TextBox x:Name="AnswerC" MaxLength="127" TextWrapping="Wrap" TextAlignment="Center" Grid.Column="3" Grid.Row="8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{
-            Binding Path=AnswerC,
+            Binding Path=SelectedQuestionAnswers[2].Content,
             Mode=TwoWay
             }"/>
         <Label x:Name="AnswerDLabel" Grid.Column="3" Grid.Row="9" Content="Odpowiedź D" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"></Label>
         <TextBox x:Name="AnswerD" MaxLength="127" TextWrapping="Wrap" TextAlignment="Center" Grid.Column="3" Grid.Row="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{
-            Binding Path=AnswerD,
+            Binding Path=SelectedQuestionAnswers[3].Content,
             Mode=TwoWay
             }"/>
         <Label Grid.Column="4" Grid.Row="3" HorizontalAlignment="Center"  VerticalAlignment="Bottom" FontWeight="Bold" Content="Poprawne odp."/>
         <CheckBox Grid.Column="4" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{
-            Binding Path=AnswerACorrect,
+            Binding Path=SelectedQuestionAnswers[0].IsCorrect,
             Mode=TwoWay
             }"/>
         <CheckBox Grid.Column="4" Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{
-            Binding Path=AnswerBCorrect,
+            Binding Path=SelectedQuestionAnswers[1].IsCorrect,
             Mode=TwoWay
             }"/>
         <CheckBox Grid.Column="4" Grid.Row="8" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{
-            Binding Path=AnswerCCorrect,
+            Binding Path=SelectedQuestionAnswers[2].IsCorrect,
             Mode=TwoWay
             }"/>
         <CheckBox Grid.Column="4" Grid.Row="10" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{
-            Binding Path=AnswerDCorrect,
+            Binding Path=SelectedQuestionAnswers[3].IsCorrect,
             Mode=TwoWay
             }"/>
     </Grid>

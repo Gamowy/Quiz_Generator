@@ -13,6 +13,17 @@ namespace Quiz.ViewModel
     {
         #region Properties
         public Quiz? quiz;
+        public string WindowTitle { 
+            get
+            {
+                string title = "Generator quizów";
+                if (quiz != null)
+                {
+                    title += $" ({quiz.DatabasePath})";
+                }
+                return title;
+            }
+            }
 
         private ObservableCollection<Question>? questions = null;
         public ObservableCollection<Question>? Questions
@@ -88,6 +99,7 @@ namespace Quiz.ViewModel
                 if (newQuiz != null)
                 {
                     quiz = newQuiz;
+                    onPropertyChanged(nameof(WindowTitle));
                     quiz.loadFromFile();
                     Questions = quiz.Questions;
                     Answers = quiz.Answers;
@@ -108,8 +120,10 @@ namespace Quiz.ViewModel
             try
             {
                 Quiz? newQuiz = QuizFileDialog.openFile();
-                if (newQuiz != null) {
+                if (newQuiz != null) 
+                {
                     quiz = newQuiz;
+                    onPropertyChanged(nameof(WindowTitle));
                     quiz.loadFromFile();
                     Questions = quiz.Questions;
                     Answers = quiz.Answers;
@@ -122,6 +136,35 @@ namespace Quiz.ViewModel
                 Questions = null;
                 Answers = null;
                 MessageBox.Show($"Błąd podczas wczytywania bazy danych z quizem:\n{ex.Message}", "Błąd odczytu!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void saveQuiz()
+        {
+            try
+            {
+                quiz!.save();
+                MessageBox.Show("Pomyślnie zapisano quiz.", "Sukces", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Błąd podczas zapisywania quizu:\n{ex.Message}", "Błąd zapisu!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void addQuestion()
+        {
+            quiz!.addQuestion();
+            SelectedQuestion = Questions!.Last();
+        }
+
+        private void removeQuestion()
+        {
+            var result = MessageBox.Show("Czy napewno chcesz usunąć pytanie?", "Usuń pytanie", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                quiz!.removeQuestion(selectedQuestion!.Id);
+                SelectedQuestion = null;
             }
         }
         #endregion
@@ -144,6 +187,14 @@ namespace Quiz.ViewModel
             }
         }
 
+        public ICommand SaveQuizCommand
+        {
+            get
+            {
+                return new RelayCommand(execute => saveQuiz(), canExecute => (quiz != null));
+            }
+        }
+
         public ICommand QuitCommand
         {
             get
@@ -156,7 +207,7 @@ namespace Quiz.ViewModel
         {
             get
             {
-                return new RelayCommand(execute => quiz!.AddQuestion(), canExecute => (quiz != null));
+                return new RelayCommand(execute => addQuestion(), canExecute => (quiz != null));
             }
         }
 
@@ -164,13 +215,7 @@ namespace Quiz.ViewModel
         {
             get
             {
-                return new RelayCommand(
-                    execute =>
-                    {
-                        quiz!.RemoveQuestion(selectedQuestion!.Id);
-                        SelectedQuestion = null;
-                    },
-                    canExecute => (quiz != null && SelectedQuestion != null));
+                return new RelayCommand(execute => removeQuestion(), canExecute => (quiz != null && SelectedQuestion != null));
             }
         }
         #endregion

@@ -2,15 +2,15 @@
 
 namespace Quiz.Model.Database
 {
-    internal class DBConnection
+    internal class DbConnection
     {
-        private static DBConnection? _instance = null;
-        public static DBConnection Instance
+        private static DbConnection? _instance = null;
+        public static DbConnection Instance
         {
             get
             {
                 if (_instance == null)
-                    _instance = new DBConnection();
+                    _instance = new DbConnection();
                 return _instance;
             }
         }
@@ -24,6 +24,6 @@ namespace Quiz.Model.Database
             return _connection;
         }
 
-        private DBConnection() { }
+        private DbConnection() { }
     }
 }

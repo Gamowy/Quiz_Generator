@@ -12,6 +12,7 @@
         Title="{Binding WindowTitle}" Height="450" Width="800"
         MinHeight="450" MinWidth="800"
         WindowTitleBrush="Gray"
+        Background="#2c2d2e"
         TitleBarHeight="25">
     <mah:MetroWindow.DataContext>
         <vm:GenerateQuiz/>
@@ -27,6 +28,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.6*" />
+            <RowDefinition Height="0.1*" />
             <RowDefinition Height="0.5*" />
             <RowDefinition Height="1.5*" />
             <RowDefinition Height="0.5*" />
@@ -39,7 +41,7 @@
             <RowDefinition Height="1*" />
             <RowDefinition Height="0.1*" />
         </Grid.RowDefinitions>
-        <Grid Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="4">
+        <Grid Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="6">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
@@ -51,13 +53,13 @@
             <Button x:Name="SaveQuizButton" Grid.Column="2" Command="{Binding SaveQuizCommand}">Zapisz quiz</Button>
             <Button x:Name="ExitButton" Grid.Column="3" Command="{Binding QuitCommand}">Wyjdź</Button>
         </Grid>
-        <DataGrid x:Name="QuestionsDataGrid" ItemsSource="{Binding Path=Questions}" SelectedItem="{Binding SelectedQuestion}" Grid.Column="1" Grid.Row="1" Grid.RowSpan="8" GridLinesVisibility="Vertical" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="False">
+        <DataGrid x:Name="QuestionsDataGrid" ItemsSource="{Binding Path=Questions}" SelectedItem="{Binding SelectedQuestion}" Grid.Column="1" Grid.Row="2" Grid.RowSpan="8" GridLinesVisibility="Vertical" AutoGenerateColumns="False" IsReadOnly="True" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Id Pytania" Binding="{Binding Id}"/>
                 <DataGridTextColumn Header="Treść pytania" Width="*" Binding="{Binding Content}"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Grid Grid.Column="1" Grid.Row="10">
+        <Grid Grid.Column="1" Grid.Row="11">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="0.1*"/>
@@ -66,45 +68,45 @@
             <Button x:Name="AddQuestionButton" Grid.Column="0" Command="{Binding AddQuestionCommand}">Dodaj pytanie</Button>
             <Button x:Name="RemoveQuestionButton" Grid.Column="2" Command="{Binding RemoveQuestionCommand}">Usuń pytanie</Button>
         </Grid>
-        <Label x:Name="QuestionContentLabel" Grid.Column="3" Grid.Row="1" Grid.ColumnSpan="2" Content="Treść pytania" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"></Label>
-        <TextBox x:Name="QuestionContent" MaxLength="255" TextWrapping="Wrap" Grid.ColumnSpan="2" TextAlignment="Center" Grid.Column="3" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{
+        <Label x:Name="QuestionContentLabel" Grid.Column="3" Grid.Row="2" Grid.ColumnSpan="2" Content="Treść pytania" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" Foreground="White"></Label>
+        <TextBox x:Name="QuestionContent" MaxLength="255" TextWrapping="Wrap" Grid.ColumnSpan="2" TextAlignment="Center" Grid.Column="3" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Gray" Foreground="White" Text="{
             Binding Path=SelectedQuestion.Content,
             Mode=TwoWay
             }"/>
-        <Label x:Name="AnswerALabel" Grid.Column="3" Grid.Row="3" Content="Odpowiedź A" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"></Label>
-        <TextBox x:Name="AnswerA" MaxLength="127" TextWrapping="Wrap" TextAlignment="Center" Grid.Column="3" Grid.Row="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{
+        <Label x:Name="AnswerALabel" Grid.Column="3" Grid.Row="4" Content="Odpowiedź A" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" Foreground="White"></Label>
+        <TextBox x:Name="AnswerA" MaxLength="127" TextWrapping="Wrap" TextAlignment="Center" Grid.Column="3" Grid.Row="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Gray" Foreground="White" Text="{
             Binding Path=SelectedQuestionAnswers[0].Content,
             Mode=TwoWay
             }"/>
-        <Label x:Name="AnswerBLabel" Grid.Column="3" Grid.Row="5" Content="Odpowiedź B" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"></Label>
-        <TextBox x:Name="AnswerB" MaxLength="127" TextWrapping="Wrap" TextAlignment="Center" Grid.Column="3" Grid.Row="6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{
+        <Label x:Name="AnswerBLabel" Grid.Column="3" Grid.Row="6" Content="Odpowiedź B" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" Foreground="White"></Label>
+        <TextBox x:Name="AnswerB" MaxLength="127" TextWrapping="Wrap" TextAlignment="Center" Grid.Column="3" Grid.Row="7" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Gray" Foreground="White" Text="{
             Binding Path=SelectedQuestionAnswers[1].Content,
             Mode=TwoWay
             }"/>
-        <Label x:Name="AnswerCLabel" Grid.Column="3" Grid.Row="7" Content="Odpowiedź C" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"></Label>
-        <TextBox x:Name="AnswerC" MaxLength="127" TextWrapping="Wrap" TextAlignment="Center" Grid.Column="3" Grid.Row="8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{
+        <Label x:Name="AnswerCLabel" Grid.Column="3" Grid.Row="8" Content="Odpowiedź C" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" Foreground="White"></Label>
+        <TextBox x:Name="AnswerC" MaxLength="127" TextWrapping="Wrap" TextAlignment="Center" Grid.Column="3" Grid.Row="9" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Gray" Foreground="White" Text="{
             Binding Path=SelectedQuestionAnswers[2].Content,
             Mode=TwoWay
             }"/>
-        <Label x:Name="AnswerDLabel" Grid.Column="3" Grid.Row="9" Content="Odpowiedź D" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold"></Label>
-        <TextBox x:Name="AnswerD" MaxLength="127" TextWrapping="Wrap" TextAlignment="Center" Grid.Column="3" Grid.Row="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="{
+        <Label x:Name="AnswerDLabel" Grid.Column="3" Grid.Row="10" Content="Odpowiedź D" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" Foreground="White"></Label>
+        <TextBox x:Name="AnswerD" MaxLength="127" TextWrapping="Wrap" TextAlignment="Center" Grid.Column="3" Grid.Row="11" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Gray" Foreground="White" Text="{
             Binding Path=SelectedQuestionAnswers[3].Content,
             Mode=TwoWay
             }"/>
-        <Label Grid.Column="4" Grid.Row="3" HorizontalAlignment="Center"  VerticalAlignment="Bottom" FontWeight="Bold" Content="Poprawne odp."/>
-        <CheckBox Grid.Column="4" Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{
+        <Label Grid.Column="4" Grid.Row="4" HorizontalAlignment="Center"  VerticalAlignment="Bottom" FontWeight="Bold" Content="Poprawne odp." Foreground="White"/>
+        <CheckBox Grid.Column="4" Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{
             Binding Path=SelectedQuestionAnswers[0].IsCorrect,
             Mode=TwoWay
             }"/>
-        <CheckBox Grid.Column="4" Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{
+        <CheckBox Grid.Column="4" Grid.Row="7" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{
             Binding Path=SelectedQuestionAnswers[1].IsCorrect,
             Mode=TwoWay
             }"/>
-        <CheckBox Grid.Column="4" Grid.Row="8" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{
+        <CheckBox Grid.Column="4" Grid.Row="9" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{
             Binding Path=SelectedQuestionAnswers[2].IsCorrect,
             Mode=TwoWay
             }"/>
-        <CheckBox Grid.Column="4" Grid.Row="10" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{
+        <CheckBox Grid.Column="4" Grid.Row="11" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{
             Binding Path=SelectedQuestionAnswers[3].IsCorrect,
             Mode=TwoWay
             }"/>

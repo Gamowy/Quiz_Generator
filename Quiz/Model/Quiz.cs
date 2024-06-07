@@ -176,7 +176,7 @@ namespace Quiz.Model
                     insertNew.ExecuteNonQuery();
                 }
 
-                // delete old answers adn insert updated answers
+                // delete old answers and insert updated answers
                 deleteOld = new SQLiteCommand("DELETE FROM answers", connection);
                 insertNew = new SQLiteCommand(INSERT_ANSWERS, connection);
                 foreach (Answer answer in Answers)

@@ -107,6 +107,7 @@ namespace QuizApp.Model
             newQuestion.Content = "Nowe pytanie";
             Questions.Add(newQuestion);
 
+            // Add answers for question
             for (int i = 0; i < 4; i++)
             {
                 Answers.Add(new Answer(lastId));

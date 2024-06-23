@@ -107,10 +107,10 @@ namespace QuizApp.Model
             newQuestion.Content = "Nowe pytanie";
             Questions.Add(newQuestion);
 
-            for (int i = 0; i < 4; i++)
+/*            for (int i = 0; i < 4; i++)
             {
                 Answers.Add(new Answer(lastId));
-            }
+            }*/
         }
 
         public void removeQuestion(int removeQuestionId)

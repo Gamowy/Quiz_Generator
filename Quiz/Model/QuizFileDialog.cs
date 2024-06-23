@@ -1,9 +1,6 @@
-﻿using System;
-using System.Windows;
-
-namespace Quiz.Model
+﻿namespace QuizApp.Model
 {
-    static class QuizFileDialog
+    public static class QuizFileDialog
     {
         public static Quiz? createFile()
         {

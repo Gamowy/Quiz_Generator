@@ -1,4 +1,4 @@
-﻿using Quiz.Model.Database;
+﻿using QuizApp.Model.Database;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,9 +6,9 @@ using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 
-namespace Quiz.Model
+namespace QuizApp.Model
 {
-    class Quiz
+    public class Quiz
     {
         #region CREATE_COMMANDS
         private const string CREATE_QUESTIONS_TB = "CREATE TABLE questions (id int primary key, content varchar(255))";
@@ -134,7 +134,7 @@ namespace Quiz.Model
         public void save()
         {
             // check if none of the values is null or empty before saving
-            var hasAnswerCheck= new Dictionary<int, bool>();
+            var hasAnswerCheck = new Dictionary<int, bool>();
             foreach (Question question in Questions.ToList())
             {
                 if (question.Content == null || question.Content.Equals(""))
@@ -154,7 +154,7 @@ namespace Quiz.Model
                     hasAnswerCheck[answer.Question_Id] = true;
                 }
             }
-            if(hasAnswerCheck.ContainsValue(false))
+            if (hasAnswerCheck.ContainsValue(false))
             {
                 var id = hasAnswerCheck.FirstOrDefault(x => x.Value == false).Key;
                 throw new Exception($"Pytanie o ID{id} nie posiada poprawnej odpowiedzi!");

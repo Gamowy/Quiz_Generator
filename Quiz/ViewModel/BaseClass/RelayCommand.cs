@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Quiz.ViewModel.BaseClass
+namespace QuizApp.ViewModel.BaseClass
 {
-    class RelayCommand : ICommand
+    public class RelayCommand : ICommand
     {
         readonly Action<object> _execute;
         readonly Predicate<object> _canExecute;

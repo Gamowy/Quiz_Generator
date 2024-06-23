@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Quiz.Model
+﻿namespace QuizApp.Model
 {
-    class Question
+    public class Question
     {
         public int Id { get; }
         public string? Content { get; set; }

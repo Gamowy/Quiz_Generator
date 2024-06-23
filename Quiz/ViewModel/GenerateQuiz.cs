@@ -1,19 +1,20 @@
 ﻿using System;
-using System.Windows.Input;
-using System.Windows;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
+using System.Windows.Input;
 
-namespace Quiz.ViewModel
+namespace QuizApp.ViewModel
 {
     using Model;
-    using Quiz.ViewModel.BaseClass;
+    using QuizApp.ViewModel.BaseClass;
 
-    class GenerateQuiz : ViewModelBase
+    public class GenerateQuiz : ViewModelBase
     {
         #region Properties
         public Quiz? quiz;
-        public string WindowTitle { 
+        public string WindowTitle
+        {
             get
             {
                 string title = "Generator quizów";
@@ -23,7 +24,7 @@ namespace Quiz.ViewModel
                 }
                 return title;
             }
-            }
+        }
 
         private ObservableCollection<Question>? questions = null;
         public ObservableCollection<Question>? Questions
@@ -65,10 +66,10 @@ namespace Quiz.ViewModel
             {
                 selectedQuestion = value;
                 onPropertyChanged(nameof(SelectedQuestion));
-                if (selectedQuestion == null) 
-                { 
+                if (selectedQuestion == null)
+                {
                     SelectedQuestionAnswers = null;
-                }   
+                }
                 else if (Answers != null)
                 {
                     SelectedQuestionAnswers = Answers.Where(answer => answer.Question_Id == SelectedQuestion!.Id).ToArray();
@@ -77,7 +78,8 @@ namespace Quiz.ViewModel
         }
 
         private Answer[]? selectedQuestionAnswers;
-        public Answer[]? SelectedQuestionAnswers { 
+        public Answer[]? SelectedQuestionAnswers
+        {
             get
             {
                 return selectedQuestionAnswers;
@@ -86,9 +88,9 @@ namespace Quiz.ViewModel
             {
                 selectedQuestionAnswers = value;
                 onPropertyChanged(nameof(SelectedQuestionAnswers));
-            }      
-        }            
-        #endregion 
+            }
+        }
+        #endregion
 
         #region Methods
         private void createQuizFile()
@@ -120,7 +122,7 @@ namespace Quiz.ViewModel
             try
             {
                 Quiz? newQuiz = QuizFileDialog.openFile();
-                if (newQuiz != null) 
+                if (newQuiz != null)
                 {
                     quiz = newQuiz;
                     onPropertyChanged(nameof(WindowTitle));
@@ -173,7 +175,7 @@ namespace Quiz.ViewModel
 
         public ICommand CreateQuizCommand
         {
-            get 
+            get
             {
                 return new RelayCommand(execute => createQuizFile(), canExecute => true);
             }

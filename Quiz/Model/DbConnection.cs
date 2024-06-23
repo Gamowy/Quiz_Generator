@@ -1,8 +1,8 @@
 ﻿using System.Data.SQLite;
 
-namespace Quiz.Model.Database
+namespace QuizApp.Model.Database
 {
-    internal class DbConnection
+    public class DbConnection
     {
         private static DbConnection? _instance = null;
         public static DbConnection Instance

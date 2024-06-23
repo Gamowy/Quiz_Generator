@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Quiz.Properties
+namespace QuizApp.Properties
 {
 
 

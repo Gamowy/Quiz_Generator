@@ -1,2 +1,2 @@
 # Quiz Generator
-Prosty generator quizów stworzony z pomocą WPF.
+Prosty generator quizów stworzony z pomocą WPF i architektury MVVM.
